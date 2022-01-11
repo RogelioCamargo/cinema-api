@@ -1,5 +1,5 @@
-const { ApolloServer, gql } = require("apollo-server");
-const Screenings = require("./data/ALL_SCREENINGS.json");
+const { gql } = require("apollo-server");
+const Screenings = require("../data/ALL_SCREENINGS.json");
 
 const typeDefs = gql`
 	type Date {
@@ -42,11 +42,4 @@ const resolvers = {
 	}
 };
 
-const server = new ApolloServer({
-	typeDefs,
-	resolvers
-});
-
-server.listen().then(({ url }) => {
-	console.log(`Server Ready At ${url}`)
-});
+module.exports = { typeDefs, resolvers };

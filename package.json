@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js",
+		"dev": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +15,11 @@
     "apollo-server-core": "^3.6.1",
     "dotenv": "^10.0.0",
     "fs-extra": "^10.0.0",
-    "graphql": "^16.2.0"
+    "graphql": "^16.2.0",
+    "mongoose": "^6.1.6",
+    "mongoose-unique-validator": "^3.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
   }
 }
