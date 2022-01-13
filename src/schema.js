@@ -1,5 +1,5 @@
 const { gql } = require("apollo-server");
-const Screenings = require("../data/ALL_SCREENINGS.json");
+const Screening = require("./models/screening");
 
 const typeDefs = gql`
 	type Date {
@@ -15,6 +15,7 @@ const typeDefs = gql`
 	}
 
 	type Screening {
+		id: ID!
 		title: String!
 		director: String
 		time: String!
@@ -29,16 +30,15 @@ const typeDefs = gql`
 	type Query {
 		screeningCount: Int!
 		allScreenings: [Screening!]!
-		findScreening(title: String!): Screening
+		findScreening(id: ID!): Screening
 	}
 `;
 
 const resolvers = {
 	Query: {
-		screeningCount: () => Screenings.length,
-		allScreenings: () => Screenings,
-		findScreening: (root, args) =>
-			Screenings.find(screening => screening.title === args.title)
+		screeningCount: () => Screening.collection.countDocuments(),
+		allScreenings: async () => await Screening.find({}),
+		findScreening: async (_, args) => await Screening.findById(args.id)
 	}
 };
 
