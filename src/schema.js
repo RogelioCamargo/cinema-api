@@ -31,6 +31,7 @@ const typeDefs = gql`
 		screeningCount: Int!
 		allScreenings: [Screening!]!
 		findScreening(id: ID!): Screening
+		findScreeningsByDate(day: Int!): [Screening!]!
 	}
 `;
 
@@ -38,7 +39,8 @@ const resolvers = {
 	Query: {
 		screeningCount: () => Screening.collection.countDocuments(),
 		allScreenings: async () => await Screening.find({}),
-		findScreening: async (_, args) => await Screening.findById(args.id)
+		findScreening: async (_, args) => await Screening.findById(args.id),
+		findScreeningsByDate: async (_, args) => await Screening.find({ "date.day": args.day })
 	}
 };
 
