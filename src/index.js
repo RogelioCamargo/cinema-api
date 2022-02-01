@@ -1,19 +1,36 @@
 require("dotenv").config();
-const { ApolloServer } = require("apollo-server");
-const mongoose = require("mongoose");
+const { ApolloServer } = require("apollo-server-express");
+const { ApolloServerPluginDrainHttpServer } = require("apollo-server-core");
 const { typeDefs, resolvers } = require("./schema");
+const mongoose = require("mongoose");
 
 mongoose.connect(process.env.MONGODB_URI)
-	.then(() => console.log("Connected to MongoDB"))
-	.catch((error) => console.log("Error Connecting to MongoDB", error.message));
+.then(() => console.log("Connected to MongoDB"))
+.catch((error) => console.log("Error Connecting to MongoDB", error.message));
 
-	
-const server = new ApolloServer({
-	typeDefs,
-	resolvers
-});
+const express = require("express");
+const http = require("http");
+const cors = require("cors");
 
-const port = process.env.PORT || "4000";
+(async function () {
+	const app = express();
+	app.use(cors());
+	const httpServer = http.createServer(app);
 
-server.listen(port);
-console.log(`🚀Server Ready!🚀`);
+	const server = new ApolloServer({
+		typeDefs,
+		resolvers,
+		plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+	});
+
+	await server.start();
+	server.applyMiddleware({
+		app,
+		path: "/"
+	})
+
+	const PORT = process.env.PORT || "4000";
+	httpServer.listen(PORT, () => {
+		console.log(`🚀Server Ready!🚀`);
+	});
+})();
